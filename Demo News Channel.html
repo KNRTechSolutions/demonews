@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo News Portal | demonews.com</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            navy: '#0F172A',   /* Deep Primary Navy Blue */
+                            blue: '#1E3A8A',   /* Main Header Blue */
+                            sky: '#0284C7',    /* Vibrant Accent Blue */
+                            cyan: '#06B6D4',   /* Accent Highlight */
+                            amber: '#F59E0B',  /* Warning/Badge Amber */
+                            light: '#F8FAFC'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .news-ticker-wrap { animation: ticker 25s linear infinite; }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Top Utility Bar (Navy Blue) -->
+    <header class="bg-brand-navy text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center text-sm border-b border-slate-800">
+            <div class="flex items-center space-x-4">
+                <!-- Dynamic Current Date -->
+                <span id="current-date" class="font-medium flex items-center text-xs md:text-sm">
+                    <i class="far fa-calendar-alt mr-1.5 text-cyan-400"></i> Loading date...
+                </span>
+                <span class="hidden md:inline bg-blue-900 text-cyan-200 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border border-cyan-500/30">Edition: Global & National</span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleView('portal')" class="hover:bg-blue-800 text-xs bg-blue-900 px-3 py-1.5 rounded-lg transition flex items-center font-semibold text-slate-100">
+                    <i class="fas fa-globe mr-1.5 text-cyan-400"></i> Live Portal
+                </button>
+                <button onclick="toggleView('login')" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-xs px-3.5 py-1.5 rounded-lg shadow transition flex items-center">
+                    <i class="fas fa-user-shield mr-1.5"></i> Admin Console
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Branding Header (Mixed Blue & White Accent) -->
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center bg-white text-slate-900 border-b border-slate-200">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="toggleView('portal')">
+                <div class="bg-gradient-to-br from-blue-700 to-indigo-900 text-white p-3 rounded-xl font-black text-2xl tracking-tighter shadow-md">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <div>
+                    <h1 class="font-black text-2xl md:text-3xl tracking-tight text-slate-900">DEMO <span class="text-blue-600">NEWS PORTAL</span></h1>
+                    <p class="text-xs text-slate-500 font-bold tracking-wide">Official Domain: <span class="text-cyan-600 font-extrabold">demonews.com</span></p>
+                </div>
+            </div>
+
+            <!-- Weather & Market Widgets -->
+            <div class="hidden lg:flex items-center space-x-6 text-xs text-slate-600 border-l pl-6 border-slate-200">
+                <div>
+                    <p class="font-bold text-slate-800"><i class="fas fa-sun text-amber-500 mr-1"></i> New Delhi 32°C</p>
+                    <p class="text-slate-500">AQI: 45 (Moderate)</p>
+                </div>
+                <div>
+                    <p class="font-bold text-emerald-600"><i class="fas fa-chart-line mr-1"></i> NASDAQ 18,250 (+0.62%)</p>
+                    <p class="text-slate-500">S&P 500 5,620</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categorized Navigation Bar (Royal Blue Gradient) -->
+        <nav class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white text-sm font-semibold overflow-x-auto shadow-inner">
+            <div class="max-w-7xl mx-auto flex space-x-1 whitespace-nowrap px-4">
+                <button onclick="filterCategory('All')" class="px-4 py-3 hover:bg-blue-700/80 transition flex items-center"><i class="fas fa-home mr-1.5 text-cyan-300"></i> Home</button>
+                <button onclick="filterCategory('Districts')" class="px-4 py-3 hover:bg-blue-700/80 transition flex items-center"><i class="fas fa-map-marker-alt text-amber-400 mr-1.5"></i> Districts & Places</button>
+                <button onclick="filterCategory('Politics')" class="px-4 py-3 hover:bg-blue-700/80 transition">Politics</button>
+                <button onclick="filterCategory('Sports')" class="px-4 py-3 hover:bg-blue-700/80 transition">Sports</button>
+                <button onclick="filterCategory('NRI')" class="px-4 py-3 hover:bg-blue-700/80 transition flex items-center"><i class="fas fa-globe-americas text-cyan-400 mr-1.5"></i> NRI Special</button>
+                <button onclick="filterCategory('Cinema')" class="px-4 py-3 hover:bg-blue-700/80 transition">Entertainment</button>
+                <button onclick="filterCategory('Business')" class="px-4 py-3 hover:bg-blue-700/80 transition">Business</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Breaking News Ticker -->
+    <div class="bg-blue-50 border-b border-blue-200 text-blue-900 px-4 py-2 flex items-center overflow-hidden text-xs md:text-sm font-bold">
+        <span class="bg-blue-600 text-white px-2.5 py-0.5 rounded-md mr-3 uppercase tracking-wider font-extrabold flex-shrink-0 shadow-sm"><i class="fas fa-bolt mr-1 text-amber-300"></i> Breaking</span>
+        <div class="overflow-hidden w-full relative">
+            <div id="ticker-text" class="news-ticker-wrap whitespace-nowrap">
+                🚀 demonews.com AI Desk Operational &nbsp; | &nbsp; 🏏 Global Cricket Championship Schedule Announced &nbsp; | &nbsp; ✈️ Direct Flights Approved for NRI Community &nbsp; | &nbsp; 📈 Tech Hub Expansion Approved
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN READER PORTAL VIEW -->
+    <div id="portal-view" class="max-w-7xl mx-auto px-4 py-6 flex-grow">
+        
+        <!-- District & Region Filter Bar -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-city text-blue-600 text-lg"></i>
+                <span class="font-bold text-slate-800 text-sm">Filter District / Region:</span>
+            </div>
+            <div class="flex flex-wrap gap-2 text-xs">
+                <button onclick="filterDistrict('All')" class="px-3 py-1.5 rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-800 transition">All Regions</button>
+                <button onclick="filterDistrict('Hyderabad')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition">Hyderabad</button>
+                <button onclick="filterDistrict('Vijayawada')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition">Vijayawada</button>
+                <button onclick="filterDistrict('Visakhapatnam')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition">Visakhapatnam</button>
+                <button onclick="filterDistrict('Tirupati')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition">Tirupati</button>
+                <button onclick="filterDistrict('Warangal')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition">Warangal</button>
+                <button onclick="filterDistrict('USA/Global')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition">USA / Global NRI</button>
+            </div>
+        </div>
+
+        <!-- News Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Main Content Feed -->
+            <div class="lg:col-span-8 space-y-6">
+                <!-- Hero Article Container -->
+                <div id="hero-article-container">
+                    <!-- Dynamic Hero Rendered via JS -->
+                </div>
+
+                <!-- Secondary Article Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="news-grid-container">
+                    <!-- Dynamic Stream Rendered via JS -->
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-4 space-y-6">
+                
+                <!-- AI Quick Digest Widget -->
+                <div class="bg-gradient-to-b from-slate-900 to-blue-950 text-white rounded-xl p-5 shadow-sm border border-slate-800">
+                    <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                        <h3 class="font-bold text-base flex items-center text-white"><i class="fas fa-brain text-cyan-400 mr-2"></i> AI News Briefs</h3>
+                        <span class="text-[10px] bg-blue-900 text-cyan-300 px-2 py-0.5 rounded font-bold uppercase tracking-wider">demonews.com AI</span>
+                    </div>
+                    <div class="space-y-4 text-xs">
+                        <div class="border-b border-slate-800/80 pb-3">
+                            <span class="text-cyan-400 font-bold uppercase tracking-wider block mb-1">Sports Update</span>
+                            <p class="font-medium text-slate-300">National T20 tournament finals slated for Sunday; tickets sold out in minutes.</p>
+                        </div>
+                        <div class="border-b border-slate-800/80 pb-3">
+                            <span class="text-amber-400 font-bold uppercase tracking-wider block mb-1">NRI Alert</span>
+                            <p class="font-medium text-slate-300">New consulate support desks opened in Dallas and Chicago for diaspora support.</p>
+                        </div>
+                        <div>
+                            <span class="text-emerald-400 font-bold uppercase tracking-wider block mb-1">Market Watch</span>
+                            <p class="font-medium text-slate-300">Regional agricultural exports record 14% growth in Q2 fiscal report.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trending Sidebar -->
+                <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+                    <h3 class="font-black text-slate-900 border-b-2 border-blue-600 pb-2 mb-4 text-sm uppercase tracking-wider">
+                        <i class="fas fa-fire text-blue-600 mr-1"></i> Trending Stories
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex space-x-3 items-start cursor-pointer group">
+                            <span class="text-2xl font-black text-slate-300 group-hover:text-blue-600 transition">01</span>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800 group-hover:text-blue-600 line-clamp-2">Tollywood Box Office: New High-Budget Actioner Sets Single-Day Record</h4>
+                                <span class="text-[10px] text-slate-400 font-semibold">Cinema • 2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-3 items-start cursor-pointer group border-t pt-3 border-slate-100">
+                            <span class="text-2xl font-black text-slate-300 group-hover:text-blue-600 transition">02</span>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800 group-hover:text-blue-600 line-clamp-2">Visakhapatnam Coastal Promenade Expansion Master Plan Approved</h4>
+                                <span class="text-[10px] text-slate-400 font-semibold">Visakhapatnam • 4 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-3 items-start cursor-pointer group border-t pt-3 border-slate-100">
+                            <span class="text-2xl font-black text-slate-300 group-hover:text-blue-600 transition">03</span>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800 group-hover:text-blue-600 line-clamp-2">Telugu Cultural Convention Expects Record Global Delegates</h4>
+                                <span class="text-[10px] text-slate-400 font-semibold">NRI Special • 6 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN PANEL VIEW -->
+    <div id="login-view" class="hidden min-h-[80vh] flex items-center justify-center p-4 flex-grow">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 max-w-md w-full p-8 relative">
+            <div class="text-center mb-6">
+                <div class="bg-gradient-to-tr from-blue-700 to-indigo-900 text-white w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 font-black text-2xl shadow-lg">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h2 class="text-2xl font-black text-slate-900">Demo News Portal CMS</h2>
+                <p class="text-xs text-slate-500 mt-1 font-semibold">Select a preset role below to auto-login to the control dashboard</p>
+            </div>
+
+            <!-- Role Credentials Presets -->
+            <div class="space-y-3 mb-6">
+                <button onclick="autoLogin('Super Admin')" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-blue-600 hover:bg-blue-50/50 transition flex items-center justify-between group">
+                    <div>
+                        <p class="font-bold text-sm text-slate-900 group-hover:text-blue-600">Super Admin</p>
+                        <p class="text-xs text-slate-500">Full system control, workflow approvals & team management</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-slate-400 group-hover:text-blue-600"></i>
+                </button>
+                <button onclick="autoLogin('Editor')" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-blue-600 hover:bg-blue-50/50 transition flex items-center justify-between group">
+                    <div>
+                        <p class="font-bold text-sm text-slate-900 group-hover:text-blue-600">Senior Editor</p>
+                        <p class="text-xs text-slate-500">Review reporter submissions, AI polish & direct publishing</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-slate-400 group-hover:text-blue-600"></i>
+                </button>
+                <button onclick="autoLogin('Reporter')" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-blue-600 hover:bg-blue-50/50 transition flex items-center justify-between group">
+                    <div>
+                        <p class="font-bold text-sm text-slate-900 group-hover:text-blue-600">District Reporter</p>
+                        <p class="text-xs text-slate-500">Submit local field reports, draft AI content & generate photos</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-slate-400 group-hover:text-blue-600"></i>
+                </button>
+            </div>
+
+            <button onclick="executeLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
+                Direct Auto-Login to Console <i class="fas fa-sign-in-alt ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL DASHBOARD -->
+    <div id="admin-view" class="hidden min-h-screen bg-slate-100 flex-grow">
+        <div class="flex flex-col md:flex-row">
+            
+            <!-- Sidebar -->
+            <aside class="w-full md:w-64 bg-slate-900 text-white min-h-screen p-4 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center space-x-3 border-b border-slate-800 pb-4 mb-6">
+                        <span class="bg-blue-600 text-white p-2 rounded-lg font-black text-lg"><i class="fas fa-newspaper"></i></span>
+                        <div>
+                            <h3 class="font-bold text-sm">DEMO NEWS CMS</h3>
+                            <p class="text-[10px] text-cyan-400 font-semibold">demonews.com v4.2</p>
+                        </div>
+                    </div>
+
+                    <!-- Role Badge -->
+                    <div class="bg-slate-800/80 p-3 rounded-xl mb-6 border border-slate-700/80">
+                        <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">Logged in as</span>
+                        <p id="user-role-display" class="font-extrabold text-cyan-400 text-sm">Super Admin</p>
+                        <p class="text-xs text-slate-300">admin@demonews.com</p>
+                    </div>
+
+                    <!-- Navigation -->
+                    <nav class="space-y-1 text-sm font-semibold">
+                        <button onclick="switchAdminTab('dashboard')" class="w-full text-left px-3 py-2.5 rounded-lg bg-blue-600 text-white flex items-center space-x-3">
+                            <i class="fas fa-chart-line w-5"></i> <span>Dashboard</span>
+                        </button>
+                        <button onclick="switchAdminTab('ai-studio')" class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white flex items-center space-x-3 transition">
+                            <i class="fas fa-wand-magic-sparkles text-amber-400 w-5"></i> <span>AI Content Studio</span>
+                        </button>
+                        <button id="users-nav-btn" onclick="switchAdminTab('users')" class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white flex items-center space-x-3 transition">
+                            <i class="fas fa-users-cog w-5"></i> <span>Reporters & Editors</span>
+                        </button>
+                    </nav>
+                </div>
+
+                <div class="border-t border-slate-800 pt-4 space-y-1">
+                    <button onclick="toggleView('portal')" class="w-full text-left px-3 py-2 text-xs text-slate-400 hover:text-white flex items-center font-semibold">
+                        <i class="fas fa-external-link-alt mr-2"></i> View Live Portal
+                    </button>
+                    <button onclick="toggleView('login')" class="w-full text-left px-3 py-2 text-xs text-red-400 hover:text-red-300 flex items-center font-semibold">
+                        <i class="fas fa-power-off mr-2"></i> Log Out
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 p-6 md:p-8 overflow-x-hidden">
+                
+                <!-- OVERVIEW TAB -->
+                <div id="admin-tab-dashboard" class="space-y-6">
+                    <div class="flex flex-wrap justify-between items-center gap-4">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-900">Editorial Control Desk</h2>
+                            <p class="text-xs text-slate-500 font-semibold">Managing live feeds across global bureaus for demonews.com</p>
+                        </div>
+                        <button onclick="switchAdminTab('ai-studio')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow flex items-center transition">
+                            <i class="fas fa-plus mr-2"></i> Create Article with AI
+                        </button>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Articles Today</span>
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="text-2xl font-black text-slate-900">142</span>
+                                <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded">+18%</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Pending Review</span>
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="text-2xl font-black text-amber-600">12</span>
+                                <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded">Needs Editor</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Active Reporters</span>
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="text-2xl font-black text-slate-900">38</span>
+                                <span class="text-xs text-slate-500 font-semibold">26 Bureaus</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-xs font-bold text-slate-400 uppercase">AI Assets Generated</span>
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="text-2xl font-black text-blue-600">89</span>
+                                <span class="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-1 rounded">Auto-tagged</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Workflow Matrix -->
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+                        <h3 class="font-bold text-base text-slate-900 mb-4">Pending Submissions Workflow</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-100 text-slate-700 uppercase font-bold">
+                                    <tr>
+                                        <th class="p-3">Title</th>
+                                        <th class="p-3">Category</th>
+                                        <th class="p-3">District</th>
+                                        <th class="p-3">Author</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 font-medium">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900">New Solar Tech Park Approved in Visakhapatnam</td>
+                                        <td class="p-3"><span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-bold">Business</span></td>
+                                        <td class="p-3">Visakhapatnam</td>
+                                        <td class="p-3 text-slate-500">Reporter (Vizag)</td>
+                                        <td class="p-3"><span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">Pending Editor</span></td>
+                                        <td class="p-3"><button onclick="alert('Article Approved for demonews.com Frontpage!')" class="bg-emerald-600 text-white font-bold px-2.5 py-1 rounded hover:bg-emerald-700">Approve & Publish</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900">National Cricket Tournament Schedule Finalized</td>
+                                        <td class="p-3"><span class="bg-orange-50 text-orange-700 px-2 py-0.5 rounded font-bold">Sports</span></td>
+                                        <td class="p-3">Hyderabad</td>
+                                        <td class="p-3 text-slate-500">Senior Sports Editor</td>
+                                        <td class="p-3"><span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">Published Live</span></td>
+                                        <td class="p-3"><button onclick="alert('Editing article...')" class="bg-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded hover:bg-slate-300">Edit</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI STUDIO -->
+                <div id="admin-tab-ai-studio" class="hidden space-y-6">
+                    <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-900 text-white p-6 rounded-2xl shadow-md">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-2xl font-black flex items-center">
+                                    <i class="fas fa-wand-magic-sparkles text-cyan-400 mr-3"></i> AI Content & Image Studio
+                                </h2>
+                                <p class="text-xs text-slate-300 mt-1 font-medium">Draft articles, rephrase news into multiple languages, and generate matching photos for demonews.com</p>
+                            </div>
+                            <span class="bg-cyan-400 text-slate-950 font-extrabold text-xs px-3 py-1 rounded-full uppercase">API Connected</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- AI Form -->
+                        <div class="lg:col-span-7 bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                            <h3 class="font-bold text-sm text-slate-900 uppercase tracking-wider">Article Prompt Input</h3>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Category</label>
+                                    <select id="ai-category" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 bg-slate-50 font-semibold">
+                                        <option>Politics</option>
+                                        <option>Sports</option>
+                                        <option>NRI</option>
+                                        <option>Cinema</option>
+                                        <option>Business</option>
+                                        <option>Districts</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">District / Region</label>
+                                    <select id="ai-district" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 bg-slate-50 font-semibold">
+                                        <option>Hyderabad</option>
+                                        <option>Vijayawada</option>
+                                        <option>Visakhapatnam</option>
+                                        <option>Tirupati</option>
+                                        <option>Warangal</option>
+                                        <option>USA/Global</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Headline or Topic Prompt</label>
+                                <input id="ai-topic" type="text" placeholder="e.g. New Flyover opened in Tirupati to ease pilgrim traffic" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-600 outline-none">
+                            </div>
+
+                            <div class="flex space-x-2">
+                                <button onclick="runAITextGen()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-2.5 rounded-lg transition flex items-center justify-center">
+                                    <i class="fas fa-brain mr-2"></i> Draft Content
+                                </button>
+                                <button onclick="runAIImageGen()" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs py-2.5 rounded-lg transition flex items-center justify-center">
+                                    <i class="fas fa-image text-cyan-400 mr-2"></i> Auto Image
+                                </button>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Generated Article Content (Editable)</label>
+                                <textarea id="ai-editor-text" rows="8" class="w-full text-xs border border-slate-300 rounded-lg p-3 leading-relaxed focus:ring-2 focus:ring-blue-600 outline-none font-sans" placeholder="AI generated content will appear here..."></textarea>
+                            </div>
+
+                            <button onclick="publishAIArticle()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3 rounded-xl shadow transition">
+                                <i class="fas fa-paper-plane mr-2"></i> Publish Directly to Front Page
+                            </button>
+                        </div>
+
+                        <!-- Live Preview Card -->
+                        <div class="lg:col-span-5 bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                            <h3 class="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center justify-between">
+                                <span>Live Card Preview</span>
+                                <span class="text-xs text-blue-600 font-bold">Real-time Rendering</span>
+                            </h3>
+
+                            <div class="border rounded-xl overflow-hidden shadow-sm bg-white">
+                                <img id="ai-preview-img" src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80" loading="lazy" class="w-full h-48 object-cover" alt="Article Preview">
+                                <div class="p-4 space-y-2">
+                                    <span id="ai-preview-badge" class="bg-blue-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded">Politics</span>
+                                    <h4 id="ai-preview-title" class="font-bold text-base text-slate-900 leading-snug">New Infrastructure Landmark Project Announced</h4>
+                                    <p id="ai-preview-body" class="text-xs text-slate-500 line-clamp-3">Enter a topic and click generate to see AI craft news content in real-time.</p>
+                                    <div class="text-[10px] text-slate-400 border-t pt-2 mt-2 flex justify-between font-semibold">
+                                        <span>Region: <strong id="ai-preview-district" class="text-slate-800">Hyderabad</strong></span>
+                                        <span>By: demonews.com AI Desk</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- USER MANAGEMENT (SUPER ADMIN) -->
+                <div id="admin-tab-users" class="hidden space-y-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-900">Reporter & Editor Roles</h2>
+                            <p class="text-xs text-slate-500 font-medium">Super Admin role management for demonews.com</p>
+                        </div>
+                        <button onclick="alert('Opening team onboarding modal...')" class="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-lg">
+                            + Add Team Member
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-100 text-slate-700 font-bold uppercase">
+                                <tr>
+                                    <th class="p-3">User Name</th>
+                                    <th class="p-3">Assigned Role</th>
+                                    <th class="p-3">Bureau / District</th>
+                                    <th class="p-3">Permissions</th>
+                                    <th class="p-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 font-medium">
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-900">S. K. Rao</td>
+                                    <td class="p-3"><span class="bg-purple-100 text-purple-900 font-extrabold px-2 py-0.5 rounded">Super Admin</span></td>
+                                    <td class="p-3">Headquarters</td>
+                                    <td class="p-3">Full System Access</td>
+                                    <td class="p-3"><span class="text-emerald-700 font-bold">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-900">K. V. Anitha</td>
+                                    <td class="p-3"><span class="bg-blue-100 text-blue-900 font-extrabold px-2 py-0.5 rounded">Senior Editor</span></td>
+                                    <td class="p-3">Vijayawada Bureau</td>
+                                    <td class="p-3">Review & Direct Publish</td>
+                                    <td class="p-3"><span class="text-emerald-700 font-bold">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold text-slate-900">M. Srinivas</td>
+                                    <td class="p-3"><span class="bg-emerald-100 text-emerald-900 font-extrabold px-2 py-0.5 rounded">District Reporter</span></td>
+                                    <td class="p-3">Visakhapatnam</td>
+                                    <td class="p-3">Drafting & AI Image Tools</td>
+                                    <td class="p-3"><span class="text-emerald-700 font-bold">Active</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- MAIN FOOTER (Navy & Mixed Blue Theme) -->
+    <footer class="bg-slate-900 text-white border-t border-slate-800 pt-10 pb-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-xs">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-2">
+                    <div class="bg-blue-600 text-white p-2 rounded-lg font-black text-lg">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <span class="font-black text-lg tracking-tight">DEMO <span class="text-cyan-400">NEWS</span></span>
+                </div>
+                <p class="text-slate-400 leading-relaxed">Leading digital news network providing verified breaking news, district coverage, sports, and global NRI updates.</p>
+                <p class="font-bold text-cyan-400">www.demonews.com</p>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-sm text-white mb-3 uppercase tracking-wider border-b border-slate-800 pb-2">Categories</h4>
+                <ul class="space-y-2 text-slate-400 font-medium">
+                    <li><a href="#" onclick="filterCategory('Politics')" class="hover:text-cyan-400 transition">Politics & Governance</a></li>
+                    <li><a href="#" onclick="filterCategory('Districts')" class="hover:text-cyan-400 transition">District Regional News</a></li>
+                    <li><a href="#" onclick="filterCategory('Sports')" class="hover:text-cyan-400 transition">Sports & Tournaments</a></li>
+                    <li><a href="#" onclick="filterCategory('NRI')" class="hover:text-cyan-400 transition">NRI Special Digest</a></li>
+                    <li><a href="#" onclick="filterCategory('Cinema')" class="hover:text-cyan-400 transition">Entertainment & Cinema</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-sm text-white mb-3 uppercase tracking-wider border-b border-slate-800 pb-2">Regional Bureaus</h4>
+                <ul class="space-y-2 text-slate-400 font-medium">
+                    <li><a href="#" onclick="filterDistrict('Hyderabad')" class="hover:text-cyan-400 transition">Hyderabad Bureau</a></li>
+                    <li><a href="#" onclick="filterDistrict('Vijayawada')" class="hover:text-cyan-400 transition">Vijayawada Desk</a></li>
+                    <li><a href="#" onclick="filterDistrict('Visakhapatnam')" class="hover:text-cyan-400 transition">Visakhapatnam Network</a></li>
+                    <li><a href="#" onclick="filterDistrict('Tirupati')" class="hover:text-cyan-400 transition">Tirupati Bureau</a></li>
+                    <li><a href="#" onclick="filterDistrict('USA/Global')" class="hover:text-cyan-400 transition">USA & Global Desk</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-sm text-white mb-3 uppercase tracking-wider border-b border-slate-800 pb-2">Newsletter</h4>
+                <p class="text-slate-400 mb-3">Subscribe to get top news delivered directly to your inbox.</p>
+                <div class="flex">
+                    <input type="email" placeholder="Enter email" class="bg-slate-800 text-white px-3 py-2 rounded-l-lg outline-none text-xs w-full border border-slate-700">
+                    <button onclick="alert('Thank you for subscribing to demonews.com!')" class="bg-blue-600 hover:bg-blue-500 px-3 py-2 rounded-r-lg font-bold text-xs">Join</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 border-t border-slate-800/80 pt-4 flex flex-col md:flex-row justify-between items-center text-[11px] text-slate-500">
+            <p>© <span id="footer-year">2026</span> Demo News Portal (demonews.com). All rights reserved.</p>
+            <div class="flex space-x-4 mt-2 md:mt-0">
+                <a href="#" class="hover:text-slate-300">Privacy Policy</a>
+                <a href="#" class="hover:text-slate-300">Terms of Service</a>
+                <a href="#" class="hover:text-slate-300">Editorial Guidelines</a>
+                <a href="#" class="hover:text-slate-300">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Initial News Articles Store
+        const newsArticles = [
+            {
+                id: 1,
+                title: "Major Infrastructure Transit Package Approved for Suburban Corridor Expansion",
+                category: "Politics",
+                district: "Hyderabad",
+                image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&q=80",
+                summary: "The cabinet has officially greenlit a 4,500 Cr package dedicated to high-speed transit expansion, connecting key suburban tech corridors.",
+                time: "15 mins ago",
+                author: "R. Sharma (Bureau)",
+                isHero: true
+            },
+            {
+                id: 2,
+                title: "AP High-Speed Rail Corridor Survey Alignment Finalized",
+                category: "Politics",
+                district: "Vijayawada",
+                image: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?auto=format&fit=crop&w=600&q=80",
+                summary: "Survey teams complete aerial mapping for the high-speed rail corridor connecting key administrative centers.",
+                time: "25 mins ago",
+                author: "Vijayawada Desk",
+                isHero: false
+            },
+            {
+                id: 3,
+                title: "Tirupati Temple Introduces AI Queue Management Pass",
+                category: "Districts",
+                district: "Tirupati",
+                image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=600&q=80",
+                summary: "Digital pass system drastically reduces waiting times for visiting pilgrims during peak weekend rush hours.",
+                time: "1 hour ago",
+                author: "Tirupati Bureau",
+                isHero: false
+            },
+            {
+                id: 4,
+                title: "Telugu Tech Guild Hosts Global Summit in Silicon Valley",
+                category: "NRI",
+                district: "USA/Global",
+                image: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80",
+                summary: "Over 500 startup founders and NRI investors gather to create cross-border innovation funds.",
+                time: "2 hours ago",
+                author: "Global Desk",
+                isHero: false
+            },
+            {
+                id: 5,
+                title: "Warangal Textile Park Receives Investment Expansion Boost",
+                category: "Business",
+                district: "Warangal",
+                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80",
+                summary: "Manufacturing units set to generate over 12,000 direct regional jobs over upcoming fiscal quarters.",
+                time: "3 hours ago",
+                author: "Business Editor",
+                isHero: false
+            }
+        ];
+
+        let currentRole = "Super Admin";
+
+        // Dynamic Date & Year Rendering
+        function initDate() {
+            const dateObj = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').innerHTML = 
+                `<i class="far fa-calendar-alt mr-1.5 text-cyan-400"></i> ${dateObj.toLocaleDateString('en-US', options)}`;
+            document.getElementById('footer-year').innerText = dateObj.getFullYear();
+        }
+
+        // Helper to Escape Text for XSS Safety
+        function escapeHTML(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // View Switcher
+        function toggleView(viewName) {
+            document.getElementById('portal-view').classList.add('hidden');
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('admin-view').classList.add('hidden');
+
+            if(viewName === 'portal') document.getElementById('portal-view').classList.remove('hidden');
+            if(viewName === 'login') document.getElementById('login-view').classList.remove('hidden');
+            if(viewName === 'admin') document.getElementById('admin-view').classList.remove('hidden');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // Render Articles to Live Stream
+        function renderNews(articles) {
+            const heroContainer = document.getElementById('hero-article-container');
+            const gridContainer = document.getElementById('news-grid-container');
+
+            heroContainer.innerHTML = '';
+            gridContainer.innerHTML = '';
+
+            if (articles.length === 0) {
+                gridContainer.innerHTML = `<div class="col-span-2 p-8 text-center text-slate-500 font-semibold">No articles found matching this category or district selection.</div>`;
+                return;
+            }
+
+            // Hero Article Selection
+            const heroArticle = articles.find(a => a.isHero) || articles[0];
+            const regularArticles = articles.filter(a => a.id !== heroArticle.id);
+
+            // Render Hero Article
+            heroContainer.innerHTML = `
+                <article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition">
+                    <div class="relative">
+                        <img src="${heroArticle.image}" alt="${escapeHTML(heroArticle.title)}" loading="lazy" class="w-full h-80 object-cover">
+                        <span class="absolute top-4 left-4 bg-blue-600 text-white text-xs font-black uppercase px-3 py-1 rounded shadow">${escapeHTML(heroArticle.category)}</span>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-xs text-slate-500 mb-2 space-x-4 font-semibold">
+                            <span><i class="far fa-clock mr-1 text-blue-600"></i> ${escapeHTML(heroArticle.time)}</span>
+                            <span><i class="fas fa-map-marker-alt mr-1 text-blue-600"></i> ${escapeHTML(heroArticle.district)}</span>
+                            <span><i class="fas fa-user-edit mr-1 text-blue-600"></i> ${escapeHTML(heroArticle.author)}</span>
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-900 leading-tight mb-3 hover:text-blue-600 cursor-pointer">
+                            ${escapeHTML(heroArticle.title)}
+                        </h2>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                            ${escapeHTML(heroArticle.summary)}
+                        </p>
+                        <div class="flex items-center justify-between border-t pt-4 border-slate-100">
+                            <span class="text-xs text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded"><i class="fas fa-robot mr-1"></i> Verified by demonews.com AI Desk</span>
+                            <button class="text-blue-600 font-bold text-xs uppercase tracking-wider hover:underline">Read Full Story <i class="fas fa-arrow-right ml-1"></i></button>
+                        </div>
+                    </div>
+                </article>
+            `;
+
+            // Render Grid Articles
+            regularArticles.forEach(art => {
+                const card = `
+                    <article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative">
+                                <img src="${art.image}" alt="${escapeHTML(art.title)}" loading="lazy" class="w-full h-44 object-cover">
+                                <span class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded shadow">${escapeHTML(art.category)}</span>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center text-[11px] text-slate-500 mb-2 space-x-3 font-semibold">
+                                    <span><i class="far fa-clock"></i> ${escapeHTML(art.time)}</span>
+                                    <span class="text-blue-600 font-bold"><i class="fas fa-map-marker-alt"></i> ${escapeHTML(art.district)}</span>
+                                </div>
+                                <h3 class="font-bold text-base text-slate-900 leading-snug hover:text-blue-600 cursor-pointer mb-2">${escapeHTML(art.title)}</h3>
+                                <p class="text-xs text-slate-600 line-clamp-2">${escapeHTML(art.summary)}</p>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4 pt-2 border-t border-slate-100 flex justify-between items-center text-[11px]">
+                            <span class="text-slate-500 font-medium">By ${escapeHTML(art.author)}</span>
+                            <button class="text-blue-600 font-bold hover:underline">Read Story <i class="fas fa-angle-right"></i></button>
+                        </div>
+                    </article>
+                `;
+                gridContainer.innerHTML += card;
+            });
+        }
+
+        // Filters
+        function filterCategory(cat) {
+            if (cat === 'All') {
+                renderNews(newsArticles);
+            } else {
+                const filtered = newsArticles.filter(a => a.category.toLowerCase() === cat.toLowerCase());
+                renderNews(filtered);
+            }
+        }
+
+        function filterDistrict(dist) {
+            if (dist === 'All') {
+                renderNews(newsArticles);
+            } else {
+                const filtered = newsArticles.filter(a => a.district.toLowerCase() === dist.toLowerCase());
+                renderNews(filtered);
+            }
+        }
+
+        // Auth Presets
+        function autoLogin(role) {
+            currentRole = role;
+            executeLogin();
+        }
+
+        function executeLogin() {
+            document.getElementById('user-role-display').innerText = currentRole;
+            const userNav = document.getElementById('users-nav-btn');
+            
+            if(currentRole === 'Reporter') {
+                userNav.classList.add('hidden');
+            } else {
+                userNav.classList.remove('hidden');
+            }
+
+            toggleView('admin');
+        }
+
+        // Switch Admin Tabs
+        function switchAdminTab(tabName) {
+            document.getElementById('admin-tab-dashboard').classList.add('hidden');
+            document.getElementById('admin-tab-ai-studio').classList.add('hidden');
+            document.getElementById('admin-tab-users').classList.add('hidden');
+
+            if(tabName === 'dashboard') document.getElementById('admin-tab-dashboard').classList.remove('hidden');
+            if(tabName === 'ai-studio') document.getElementById('admin-tab-ai-studio').classList.remove('hidden');
+            if(tabName === 'users') document.getElementById('admin-tab-users').classList.remove('hidden');
+        }
+
+        // AI Generator Simulation
+        function runAITextGen() {
+            const topic = document.getElementById('ai-topic').value || "Smart Corridor Development Project";
+            const dist = document.getElementById('ai-district').value;
+            const cat = document.getElementById('ai-category').value;
+
+            const aiBody = `[DEMONEWS.COM AI DESK DRAFT - ${cat.toUpperCase()}]\n\n` +
+            `${dist.toUpperCase()}: Municipal and regional leaders today unveiled details regarding the ${topic}.\n\n` +
+            `The project emphasizes sustainable infrastructure and digital integration. Officials confirmed that initial execution will begin within six months, bringing localized employment opportunities and enhanced civic standards across ${dist}.`;
+
+            document.getElementById('ai-editor-text').value = aiBody;
+            document.getElementById('ai-preview-title').innerText = topic;
+            document.getElementById('ai-preview-body').innerText = aiBody.substring(0, 140) + "...";
+            document.getElementById('ai-preview-badge').innerText = cat;
+            document.getElementById('ai-preview-district').innerText = dist;
+        }
+
+        // AI Image Simulation
+        function runAIImageGen() {
+            const images = [
+                "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+                "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
+                "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80"
+            ];
+            const randomImg = images[Math.floor(Math.random() * images.length)];
+            document.getElementById('ai-preview-img').src = randomImg;
+        }
+
+        // Publish AI Article
+        function publishAIArticle() {
+            const title = document.getElementById('ai-preview-title').innerText;
+            const cat = document.getElementById('ai-category').value;
+            const dist = document.getElementById('ai-district').value;
+            const body = document.getElementById('ai-editor-text').value;
+            const img = document.getElementById('ai-preview-img').src;
+
+            if(!body) {
+                alert('Please generate or write content first!');
+                return;
+            }
+
+            newsArticles.forEach(a => a.isHero = false);
+
+            const newArticle = {
+                id: newsArticles.length + 1,
+                title: title,
+                category: cat,
+                district: dist,
+                image: img,
+                summary: body.substring(0, 150) + "...",
+                time: "Just now",
+                author: `demonews.com AI Desk (${currentRole})`,
+                isHero: true
+            };
+
+            newsArticles.unshift(newArticle);
+            
+            document.getElementById('ticker-text').innerHTML = 
+                `🔥 JUST PUBLISHED: ${escapeHTML(title)} (${dist}) &nbsp; | &nbsp; ` + document.getElementById('ticker-text').innerHTML;
+
+            renderNews(newsArticles);
+            alert('Article published as Hero story on demonews.com!');
+            toggleView('portal');
+        }
+
+        // App Initialization
+        initDate();
+        renderNews(newsArticles);
+    </script>
+</body>
+</html>

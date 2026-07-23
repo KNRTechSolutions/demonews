@@ -12,11 +12,11 @@
                 extend: {
                     colors: {
                         brand: {
-                            navy: '#0F172A',   /* Deep Primary Navy Blue */
-                            blue: '#1E3A8A',   /* Main Header Blue */
-                            sky: '#0284C7',    /* Vibrant Accent Blue */
-                            cyan: '#06B6D4',   /* Accent Highlight */
-                            amber: '#F59E0B',  /* Warning/Badge Amber */
+                            navy: '#0F172A',
+                            blue: '#1E3A8A',
+                            sky: '#0284C7',
+                            cyan: '#06B6D4',
+                            amber: '#F59E0B',
                             light: '#F8FAFC'
                         }
                     }
@@ -30,39 +30,41 @@
         @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        /* Hide scrollbars for clean horizontal scrolling */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans antialiased flex flex-col min-h-screen">
 
-    <!-- Top Utility Bar (Navy Blue) -->
+    <!-- Top Utility Bar -->
     <header class="bg-brand-navy text-white sticky top-0 z-50 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center text-sm border-b border-slate-800">
-            <div class="flex items-center space-x-4">
-                <!-- Dynamic Current Date -->
-                <span id="current-date" class="font-medium flex items-center text-xs md:text-sm">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center text-xs md:text-sm border-b border-slate-800">
+            <div class="flex items-center space-x-3">
+                <span id="current-date" class="font-medium flex items-center text-xs">
                     <i class="far fa-calendar-alt mr-1.5 text-cyan-400"></i> Loading date...
                 </span>
-                <span class="hidden md:inline bg-blue-900 text-cyan-200 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border border-cyan-500/30">Edition: Global & National</span>
+                <span class="hidden sm:inline bg-blue-900/80 text-cyan-200 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider border border-cyan-500/30">Global Edition</span>
             </div>
-            <div class="flex items-center space-x-3">
-                <button onclick="toggleView('portal')" class="hover:bg-blue-800 text-xs bg-blue-900 px-3 py-1.5 rounded-lg transition flex items-center font-semibold text-slate-100">
-                    <i class="fas fa-globe mr-1.5 text-cyan-400"></i> Live Portal
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <button onclick="toggleView('portal')" class="hover:bg-blue-800 text-[11px] sm:text-xs bg-blue-900 px-2.5 py-1.5 rounded-lg transition flex items-center font-semibold text-slate-100">
+                    <i class="fas fa-globe mr-1 text-cyan-400"></i> <span class="hidden sm:inline">Live Portal</span><span class="sm:hidden">Portal</span>
                 </button>
-                <button onclick="toggleView('login')" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-xs px-3.5 py-1.5 rounded-lg shadow transition flex items-center">
-                    <i class="fas fa-user-shield mr-1.5"></i> Admin Console
+                <button onclick="toggleView('login')" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-[11px] sm:text-xs px-3 py-1.5 rounded-lg shadow transition flex items-center">
+                    <i class="fas fa-user-shield mr-1"></i> <span class="hidden sm:inline">Admin Console</span><span class="sm:hidden">Admin</span>
                 </button>
             </div>
         </div>
 
-        <!-- Main Branding Header (Mixed Blue & White Accent) -->
-        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center bg-white text-slate-900 border-b border-slate-200">
+        <!-- Main Branding Header -->
+        <div class="max-w-7xl mx-auto px-4 py-3 sm:py-4 flex justify-between items-center bg-white text-slate-900 border-b border-slate-200">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="toggleView('portal')">
-                <div class="bg-gradient-to-br from-blue-700 to-indigo-900 text-white p-3 rounded-xl font-black text-2xl tracking-tighter shadow-md">
+                <div class="bg-gradient-to-br from-blue-700 to-indigo-900 text-white p-2.5 sm:p-3 rounded-xl font-black text-xl sm:text-2xl tracking-tighter shadow-md">
                     <i class="fas fa-newspaper"></i>
                 </div>
                 <div>
-                    <h1 class="font-black text-2xl md:text-3xl tracking-tight text-slate-900">DEMO <span class="text-blue-600">NEWS PORTAL</span></h1>
-                    <p class="text-xs text-slate-500 font-bold tracking-wide">Official Domain: <span class="text-cyan-600 font-extrabold">demonews.com</span></p>
+                    <h1 class="font-black text-xl sm:text-2xl md:text-3xl tracking-tight text-slate-900">DEMO <span class="text-blue-600">NEWS PORTAL</span></h1>
+                    <p class="text-[10px] sm:text-xs text-slate-500 font-bold tracking-wide">Domain: <span class="text-cyan-600 font-extrabold">demonews.com</span></p>
                 </div>
             </div>
 
@@ -70,17 +72,22 @@
             <div class="hidden lg:flex items-center space-x-6 text-xs text-slate-600 border-l pl-6 border-slate-200">
                 <div>
                     <p class="font-bold text-slate-800"><i class="fas fa-sun text-amber-500 mr-1"></i> New Delhi 32°C</p>
-                    <p class="text-slate-500">AQI: 45 (Moderate)</p>
+                    <p class="text-slate-500">AQI: 45 (Good)</p>
                 </div>
                 <div>
                     <p class="font-bold text-emerald-600"><i class="fas fa-chart-line mr-1"></i> NASDAQ 18,250 (+0.62%)</p>
                     <p class="text-slate-500">S&P 500 5,620</p>
                 </div>
             </div>
+
+            <!-- Mobile Category Menu Button -->
+            <button onclick="toggleMobileNav()" class="md:hidden text-slate-800 text-xl p-2 focus:outline-none">
+                <i class="fas fa-bars" id="mobile-menu-icon"></i>
+            </button>
         </div>
 
-        <!-- Categorized Navigation Bar (Royal Blue Gradient) -->
-        <nav class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white text-sm font-semibold overflow-x-auto shadow-inner">
+        <!-- Desktop Navigation Bar -->
+        <nav class="hidden md:block bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white text-sm font-semibold shadow-inner">
             <div class="max-w-7xl mx-auto flex space-x-1 whitespace-nowrap px-4">
                 <button onclick="filterCategory('All')" class="px-4 py-3 hover:bg-blue-700/80 transition flex items-center"><i class="fas fa-home mr-1.5 text-cyan-300"></i> Home</button>
                 <button onclick="filterCategory('Districts')" class="px-4 py-3 hover:bg-blue-700/80 transition flex items-center"><i class="fas fa-map-marker-alt text-amber-400 mr-1.5"></i> Districts & Places</button>
@@ -91,35 +98,48 @@
                 <button onclick="filterCategory('Business')" class="px-4 py-3 hover:bg-blue-700/80 transition">Business</button>
             </div>
         </nav>
+
+        <!-- Mobile Navigation Menu Drawer -->
+        <div id="mobile-nav" class="hidden md:hidden bg-blue-950 border-t border-blue-800 text-white text-sm font-semibold p-4 space-y-2">
+            <button onclick="filterCategory('All'); toggleMobileNav();" class="w-full text-left py-2 px-3 hover:bg-blue-900 rounded flex items-center"><i class="fas fa-home mr-2 text-cyan-400"></i> Home</button>
+            <button onclick="filterCategory('Districts'); toggleMobileNav();" class="w-full text-left py-2 px-3 hover:bg-blue-900 rounded flex items-center"><i class="fas fa-map-marker-alt mr-2 text-amber-400"></i> Districts & Places</button>
+            <button onclick="filterCategory('Politics'); toggleMobileNav();" class="w-full text-left py-2 px-3 hover:bg-blue-900 rounded">Politics</button>
+            <button onclick="filterCategory('Sports'); toggleMobileNav();" class="w-full text-left py-2 px-3 hover:bg-blue-900 rounded">Sports</button>
+            <button onclick="filterCategory('NRI'); toggleMobileNav();" class="w-full text-left py-2 px-3 hover:bg-blue-900 rounded flex items-center"><i class="fas fa-globe-americas mr-2 text-cyan-400"></i> NRI Special</button>
+            <button onclick="filterCategory('Cinema'); toggleMobileNav();" class="w-full text-left py-2 px-3 hover:bg-blue-900 rounded">Entertainment</button>
+            <button onclick="filterCategory('Business'); toggleMobileNav();" class="w-full text-left py-2 px-3 hover:bg-blue-900 rounded">Business</button>
+        </div>
     </header>
 
     <!-- Breaking News Ticker -->
-    <div class="bg-blue-50 border-b border-blue-200 text-blue-900 px-4 py-2 flex items-center overflow-hidden text-xs md:text-sm font-bold">
-        <span class="bg-blue-600 text-white px-2.5 py-0.5 rounded-md mr-3 uppercase tracking-wider font-extrabold flex-shrink-0 shadow-sm"><i class="fas fa-bolt mr-1 text-amber-300"></i> Breaking</span>
+    <div class="bg-blue-50 border-b border-blue-200 text-blue-900 px-3 sm:px-4 py-2 flex items-center overflow-hidden text-xs md:text-sm font-bold">
+        <span class="bg-blue-600 text-white px-2 sm:px-2.5 py-0.5 rounded-md mr-2 sm:mr-3 uppercase tracking-wider font-extrabold flex-shrink-0 text-[10px] sm:text-xs shadow-sm">
+            <i class="fas fa-bolt mr-1 text-amber-300"></i> Breaking
+        </span>
         <div class="overflow-hidden w-full relative">
-            <div id="ticker-text" class="news-ticker-wrap whitespace-nowrap">
+            <div id="ticker-text" class="news-ticker-wrap whitespace-nowrap text-xs sm:text-sm">
                 🚀 demonews.com AI Desk Operational &nbsp; | &nbsp; 🏏 Global Cricket Championship Schedule Announced &nbsp; | &nbsp; ✈️ Direct Flights Approved for NRI Community &nbsp; | &nbsp; 📈 Tech Hub Expansion Approved
             </div>
         </div>
     </div>
 
     <!-- MAIN READER PORTAL VIEW -->
-    <div id="portal-view" class="max-w-7xl mx-auto px-4 py-6 flex-grow">
+    <div id="portal-view" class="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex-grow w-full">
         
         <!-- District & Region Filter Bar -->
-        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div class="flex items-center space-x-2">
-                <i class="fas fa-city text-blue-600 text-lg"></i>
-                <span class="font-bold text-slate-800 text-sm">Filter District / Region:</span>
+                <i class="fas fa-city text-blue-600 text-base sm:text-lg"></i>
+                <span class="font-bold text-slate-800 text-xs sm:text-sm whitespace-nowrap">District / Region:</span>
             </div>
-            <div class="flex flex-wrap gap-2 text-xs">
-                <button onclick="filterDistrict('All')" class="px-3 py-1.5 rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-800 transition">All Regions</button>
-                <button onclick="filterDistrict('Hyderabad')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition">Hyderabad</button>
-                <button onclick="filterDistrict('Vijayawada')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition">Vijayawada</button>
-                <button onclick="filterDistrict('Visakhapatnam')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition">Visakhapatnam</button>
-                <button onclick="filterDistrict('Tirupati')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition">Tirupati</button>
-                <button onclick="filterDistrict('Warangal')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition">Warangal</button>
-                <button onclick="filterDistrict('USA/Global')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition">USA / Global NRI</button>
+            <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1 text-xs w-full md:w-auto">
+                <button onclick="filterDistrict('All')" class="px-3 py-1.5 rounded-full bg-slate-900 text-white font-semibold hover:bg-slate-800 transition whitespace-nowrap">All Regions</button>
+                <button onclick="filterDistrict('Hyderabad')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition whitespace-nowrap">Hyderabad</button>
+                <button onclick="filterDistrict('Vijayawada')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition whitespace-nowrap">Vijayawada</button>
+                <button onclick="filterDistrict('Visakhapatnam')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition whitespace-nowrap">Visakhapatnam</button>
+                <button onclick="filterDistrict('Tirupati')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition whitespace-nowrap">Tirupati</button>
+                <button onclick="filterDistrict('Warangal')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition whitespace-nowrap">Warangal</button>
+                <button onclick="filterDistrict('USA/Global')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-semibold border border-slate-200 transition whitespace-nowrap">USA / Global NRI</button>
             </div>
         </div>
 
@@ -134,7 +154,7 @@
                 </div>
 
                 <!-- Secondary Article Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="news-grid-container">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6" id="news-grid-container">
                     <!-- Dynamic Stream Rendered via JS -->
                 </div>
             </div>
@@ -143,9 +163,9 @@
             <div class="lg:col-span-4 space-y-6">
                 
                 <!-- AI Quick Digest Widget -->
-                <div class="bg-gradient-to-b from-slate-900 to-blue-950 text-white rounded-xl p-5 shadow-sm border border-slate-800">
+                <div class="bg-gradient-to-b from-slate-900 to-blue-950 text-white rounded-xl p-4 sm:p-5 shadow-sm border border-slate-800">
                     <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-                        <h3 class="font-bold text-base flex items-center text-white"><i class="fas fa-brain text-cyan-400 mr-2"></i> AI News Briefs</h3>
+                        <h3 class="font-bold text-sm sm:text-base flex items-center text-white"><i class="fas fa-brain text-cyan-400 mr-2"></i> AI News Briefs</h3>
                         <span class="text-[10px] bg-blue-900 text-cyan-300 px-2 py-0.5 rounded font-bold uppercase tracking-wider">demonews.com AI</span>
                     </div>
                     <div class="space-y-4 text-xs">
@@ -165,7 +185,7 @@
                 </div>
 
                 <!-- Trending Sidebar -->
-                <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-200">
+                <div class="bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-slate-200">
                     <h3 class="font-black text-slate-900 border-b-2 border-blue-600 pb-2 mb-4 text-sm uppercase tracking-wider">
                         <i class="fas fa-fire text-blue-600 mr-1"></i> Trending Stories
                     </h3>
@@ -199,13 +219,13 @@
     </div>
 
     <!-- LOGIN PANEL VIEW -->
-    <div id="login-view" class="hidden min-h-[80vh] flex items-center justify-center p-4 flex-grow">
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 max-w-md w-full p-8 relative">
+    <div id="login-view" class="hidden min-h-[75vh] flex items-center justify-center p-4 flex-grow w-full">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 max-w-md w-full p-6 sm:p-8 relative">
             <div class="text-center mb-6">
                 <div class="bg-gradient-to-tr from-blue-700 to-indigo-900 text-white w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 font-black text-2xl shadow-lg">
                     <i class="fas fa-user-shield"></i>
                 </div>
-                <h2 class="text-2xl font-black text-slate-900">Demo News Portal CMS</h2>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900">Demo News Portal CMS</h2>
                 <p class="text-xs text-slate-500 mt-1 font-semibold">Select a preset role below to auto-login to the control dashboard</p>
             </div>
 
@@ -214,23 +234,23 @@
                 <button onclick="autoLogin('Super Admin')" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-blue-600 hover:bg-blue-50/50 transition flex items-center justify-between group">
                     <div>
                         <p class="font-bold text-sm text-slate-900 group-hover:text-blue-600">Super Admin</p>
-                        <p class="text-xs text-slate-500">Full system control, workflow approvals & team management</p>
+                        <p class="text-[11px] sm:text-xs text-slate-500">Full system control, workflow approvals & team management</p>
                     </div>
-                    <i class="fas fa-arrow-right text-slate-400 group-hover:text-blue-600"></i>
+                    <i class="fas fa-arrow-right text-slate-400 group-hover:text-blue-600 ml-2"></i>
                 </button>
                 <button onclick="autoLogin('Editor')" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-blue-600 hover:bg-blue-50/50 transition flex items-center justify-between group">
                     <div>
                         <p class="font-bold text-sm text-slate-900 group-hover:text-blue-600">Senior Editor</p>
-                        <p class="text-xs text-slate-500">Review reporter submissions, AI polish & direct publishing</p>
+                        <p class="text-[11px] sm:text-xs text-slate-500">Review reporter submissions, AI polish & direct publishing</p>
                     </div>
-                    <i class="fas fa-arrow-right text-slate-400 group-hover:text-blue-600"></i>
+                    <i class="fas fa-arrow-right text-slate-400 group-hover:text-blue-600 ml-2"></i>
                 </button>
                 <button onclick="autoLogin('Reporter')" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-blue-600 hover:bg-blue-50/50 transition flex items-center justify-between group">
                     <div>
                         <p class="font-bold text-sm text-slate-900 group-hover:text-blue-600">District Reporter</p>
-                        <p class="text-xs text-slate-500">Submit local field reports, draft AI content & generate photos</p>
+                        <p class="text-[11px] sm:text-xs text-slate-500">Submit local field reports, draft AI content & generate photos</p>
                     </div>
-                    <i class="fas fa-arrow-right text-slate-400 group-hover:text-blue-600"></i>
+                    <i class="fas fa-arrow-right text-slate-400 group-hover:text-blue-600 ml-2"></i>
                 </button>
             </div>
 
@@ -241,13 +261,24 @@
     </div>
 
     <!-- ADMIN PANEL DASHBOARD -->
-    <div id="admin-view" class="hidden min-h-screen bg-slate-100 flex-grow">
+    <div id="admin-view" class="hidden min-h-screen bg-slate-100 flex-grow w-full">
+        <!-- Admin Mobile Header -->
+        <div class="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center border-b border-slate-800">
+            <div class="flex items-center space-x-2">
+                <span class="bg-blue-600 text-white p-1.5 rounded text-sm font-black"><i class="fas fa-newspaper"></i></span>
+                <span class="font-bold text-sm">DEMO NEWS CMS</span>
+            </div>
+            <button onclick="toggleAdminSidebar()" class="text-white text-lg focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
         <div class="flex flex-col md:flex-row">
             
             <!-- Sidebar -->
-            <aside class="w-full md:w-64 bg-slate-900 text-white min-h-screen p-4 flex flex-col justify-between">
+            <aside id="admin-sidebar" class="hidden md:flex w-full md:w-64 bg-slate-900 text-white min-h-screen p-4 flex-col justify-between">
                 <div>
-                    <div class="flex items-center space-x-3 border-b border-slate-800 pb-4 mb-6">
+                    <div class="hidden md:flex items-center space-x-3 border-b border-slate-800 pb-4 mb-6">
                         <span class="bg-blue-600 text-white p-2 rounded-lg font-black text-lg"><i class="fas fa-newspaper"></i></span>
                         <div>
                             <h3 class="font-bold text-sm">DEMO NEWS CMS</h3>
@@ -276,7 +307,7 @@
                     </nav>
                 </div>
 
-                <div class="border-t border-slate-800 pt-4 space-y-1">
+                <div class="border-t border-slate-800 pt-4 space-y-1 mt-6 md:mt-0">
                     <button onclick="toggleView('portal')" class="w-full text-left px-3 py-2 text-xs text-slate-400 hover:text-white flex items-center font-semibold">
                         <i class="fas fa-external-link-alt mr-2"></i> View Live Portal
                     </button>
@@ -287,13 +318,13 @@
             </aside>
 
             <!-- Main Content Area -->
-            <main class="flex-1 p-6 md:p-8 overflow-x-hidden">
+            <main class="flex-1 p-4 sm:p-6 md:p-8 overflow-x-hidden">
                 
                 <!-- OVERVIEW TAB -->
                 <div id="admin-tab-dashboard" class="space-y-6">
                     <div class="flex flex-wrap justify-between items-center gap-4">
                         <div>
-                            <h2 class="text-2xl font-black text-slate-900">Editorial Control Desk</h2>
+                            <h2 class="text-xl sm:text-2xl font-black text-slate-900">Editorial Control Desk</h2>
                             <p class="text-xs text-slate-500 font-semibold">Managing live feeds across global bureaus for demonews.com</p>
                         </div>
                         <button onclick="switchAdminTab('ai-studio')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow flex items-center transition">
@@ -302,42 +333,42 @@
                     </div>
 
                     <!-- Metrics Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                            <span class="text-xs font-bold text-slate-400 uppercase">Articles Today</span>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                        <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase">Articles Today</span>
                             <div class="flex items-center justify-between mt-2">
-                                <span class="text-2xl font-black text-slate-900">142</span>
-                                <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded">+18%</span>
+                                <span class="text-xl sm:text-2xl font-black text-slate-900">142</span>
+                                <span class="text-[10px] sm:text-xs font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">+18%</span>
                             </div>
                         </div>
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                            <span class="text-xs font-bold text-slate-400 uppercase">Pending Review</span>
+                        <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase">Pending Review</span>
                             <div class="flex items-center justify-between mt-2">
-                                <span class="text-2xl font-black text-amber-600">12</span>
-                                <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded">Needs Editor</span>
+                                <span class="text-xl sm:text-2xl font-black text-amber-600">12</span>
+                                <span class="text-[10px] sm:text-xs font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">Review</span>
                             </div>
                         </div>
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                            <span class="text-xs font-bold text-slate-400 uppercase">Active Reporters</span>
+                        <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase">Active Reporters</span>
                             <div class="flex items-center justify-between mt-2">
-                                <span class="text-2xl font-black text-slate-900">38</span>
-                                <span class="text-xs text-slate-500 font-semibold">26 Bureaus</span>
+                                <span class="text-xl sm:text-2xl font-black text-slate-900">38</span>
+                                <span class="text-[10px] text-slate-500 font-semibold hidden sm:inline">26 Bureaus</span>
                             </div>
                         </div>
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                            <span class="text-xs font-bold text-slate-400 uppercase">AI Assets Generated</span>
+                        <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase">AI Assets Drafted</span>
                             <div class="flex items-center justify-between mt-2">
-                                <span class="text-2xl font-black text-blue-600">89</span>
-                                <span class="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-1 rounded">Auto-tagged</span>
+                                <span class="text-xl sm:text-2xl font-black text-blue-600">89</span>
+                                <span class="text-[10px] sm:text-xs font-bold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded">Auto</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Workflow Matrix -->
-                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+                    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-6">
                         <h3 class="font-bold text-base text-slate-900 mb-4">Pending Submissions Workflow</h3>
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left text-xs">
+                            <table class="w-full text-left text-xs min-w-[600px]">
                                 <thead class="bg-slate-100 text-slate-700 uppercase font-bold">
                                     <tr>
                                         <th class="p-3">Title</th>
@@ -373,24 +404,24 @@
 
                 <!-- AI STUDIO -->
                 <div id="admin-tab-ai-studio" class="hidden space-y-6">
-                    <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-900 text-white p-6 rounded-2xl shadow-md">
-                        <div class="flex items-center justify-between">
+                    <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-900 text-white p-5 sm:p-6 rounded-2xl shadow-md">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
-                                <h2 class="text-2xl font-black flex items-center">
-                                    <i class="fas fa-wand-magic-sparkles text-cyan-400 mr-3"></i> AI Content & Image Studio
+                                <h2 class="text-xl sm:text-2xl font-black flex items-center">
+                                    <i class="fas fa-wand-magic-sparkles text-cyan-400 mr-2.5"></i> AI Content & Image Studio
                                 </h2>
-                                <p class="text-xs text-slate-300 mt-1 font-medium">Draft articles, rephrase news into multiple languages, and generate matching photos for demonews.com</p>
+                                <p class="text-xs text-slate-300 mt-1 font-medium">Draft articles, rephrase news, and generate matching photos for demonews.com</p>
                             </div>
-                            <span class="bg-cyan-400 text-slate-950 font-extrabold text-xs px-3 py-1 rounded-full uppercase">API Connected</span>
+                            <span class="bg-cyan-400 text-slate-950 font-extrabold text-[10px] sm:text-xs px-3 py-1 rounded-full uppercase w-max">API Connected</span>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                         <!-- AI Form -->
-                        <div class="lg:col-span-7 bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                        <div class="lg:col-span-7 bg-white p-4 sm:p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
                             <h3 class="font-bold text-sm text-slate-900 uppercase tracking-wider">Article Prompt Input</h3>
                             
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 mb-1">Category</label>
                                     <select id="ai-category" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 bg-slate-50 font-semibold">
@@ -420,7 +451,7 @@
                                 <input id="ai-topic" type="text" placeholder="e.g. New Flyover opened in Tirupati to ease pilgrim traffic" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-600 outline-none">
                             </div>
 
-                            <div class="flex space-x-2">
+                            <div class="flex flex-col sm:flex-row gap-2">
                                 <button onclick="runAITextGen()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs py-2.5 rounded-lg transition flex items-center justify-center">
                                     <i class="fas fa-brain mr-2"></i> Draft Content
                                 </button>
@@ -431,7 +462,7 @@
 
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1">Generated Article Content (Editable)</label>
-                                <textarea id="ai-editor-text" rows="8" class="w-full text-xs border border-slate-300 rounded-lg p-3 leading-relaxed focus:ring-2 focus:ring-blue-600 outline-none font-sans" placeholder="AI generated content will appear here..."></textarea>
+                                <textarea id="ai-editor-text" rows="7" class="w-full text-xs border border-slate-300 rounded-lg p-3 leading-relaxed focus:ring-2 focus:ring-blue-600 outline-none font-sans" placeholder="AI generated content will appear here..."></textarea>
                             </div>
 
                             <button onclick="publishAIArticle()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3 rounded-xl shadow transition">
@@ -440,16 +471,18 @@
                         </div>
 
                         <!-- Live Preview Card -->
-                        <div class="lg:col-span-5 bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                        <div class="lg:col-span-5 bg-white p-4 sm:p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
                             <h3 class="font-bold text-sm text-slate-900 uppercase tracking-wider flex items-center justify-between">
                                 <span>Live Card Preview</span>
-                                <span class="text-xs text-blue-600 font-bold">Real-time Rendering</span>
+                                <span class="text-xs text-blue-600 font-bold">Real-time</span>
                             </h3>
 
-                            <div class="border rounded-xl overflow-hidden shadow-sm bg-white">
-                                <img id="ai-preview-img" src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80" loading="lazy" class="w-full h-48 object-cover" alt="Article Preview">
-                                <div class="p-4 space-y-2">
-                                    <span id="ai-preview-badge" class="bg-blue-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded">Politics</span>
+                            <div class="border rounded-xl overflow-hidden shadow-sm bg-slate-800">
+                                <div class="relative w-full h-48 bg-slate-800">
+                                    <img id="ai-preview-img" src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80" onerror="handleImageError(this)" loading="lazy" class="w-full h-full object-cover" alt="Article Preview">
+                                    <span id="ai-preview-badge" class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded shadow">Politics</span>
+                                </div>
+                                <div class="p-4 bg-white space-y-2">
                                     <h4 id="ai-preview-title" class="font-bold text-base text-slate-900 leading-snug">New Infrastructure Landmark Project Announced</h4>
                                     <p id="ai-preview-body" class="text-xs text-slate-500 line-clamp-3">Enter a topic and click generate to see AI craft news content in real-time.</p>
                                     <div class="text-[10px] text-slate-400 border-t pt-2 mt-2 flex justify-between font-semibold">
@@ -464,9 +497,9 @@
 
                 <!-- USER MANAGEMENT (SUPER ADMIN) -->
                 <div id="admin-tab-users" class="hidden space-y-6">
-                    <div class="flex justify-between items-center">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
-                            <h2 class="text-2xl font-black text-slate-900">Reporter & Editor Roles</h2>
+                            <h2 class="text-xl sm:text-2xl font-black text-slate-900">Reporter & Editor Roles</h2>
                             <p class="text-xs text-slate-500 font-medium">Super Admin role management for demonews.com</p>
                         </div>
                         <button onclick="alert('Opening team onboarding modal...')" class="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-lg">
@@ -475,40 +508,42 @@
                     </div>
 
                     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-slate-100 text-slate-700 font-bold uppercase">
-                                <tr>
-                                    <th class="p-3">User Name</th>
-                                    <th class="p-3">Assigned Role</th>
-                                    <th class="p-3">Bureau / District</th>
-                                    <th class="p-3">Permissions</th>
-                                    <th class="p-3">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 font-medium">
-                                <tr>
-                                    <td class="p-3 font-bold text-slate-900">S. K. Rao</td>
-                                    <td class="p-3"><span class="bg-purple-100 text-purple-900 font-extrabold px-2 py-0.5 rounded">Super Admin</span></td>
-                                    <td class="p-3">Headquarters</td>
-                                    <td class="p-3">Full System Access</td>
-                                    <td class="p-3"><span class="text-emerald-700 font-bold">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="p-3 font-bold text-slate-900">K. V. Anitha</td>
-                                    <td class="p-3"><span class="bg-blue-100 text-blue-900 font-extrabold px-2 py-0.5 rounded">Senior Editor</span></td>
-                                    <td class="p-3">Vijayawada Bureau</td>
-                                    <td class="p-3">Review & Direct Publish</td>
-                                    <td class="p-3"><span class="text-emerald-700 font-bold">Active</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="p-3 font-bold text-slate-900">M. Srinivas</td>
-                                    <td class="p-3"><span class="bg-emerald-100 text-emerald-900 font-extrabold px-2 py-0.5 rounded">District Reporter</span></td>
-                                    <td class="p-3">Visakhapatnam</td>
-                                    <td class="p-3">Drafting & AI Image Tools</td>
-                                    <td class="p-3"><span class="text-emerald-700 font-bold">Active</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs min-w-[550px]">
+                                <thead class="bg-slate-100 text-slate-700 font-bold uppercase">
+                                    <tr>
+                                        <th class="p-3">User Name</th>
+                                        <th class="p-3">Assigned Role</th>
+                                        <th class="p-3">Bureau / District</th>
+                                        <th class="p-3">Permissions</th>
+                                        <th class="p-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 font-medium">
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900">S. K. Rao</td>
+                                        <td class="p-3"><span class="bg-purple-100 text-purple-900 font-extrabold px-2 py-0.5 rounded">Super Admin</span></td>
+                                        <td class="p-3">Headquarters</td>
+                                        <td class="p-3">Full System Access</td>
+                                        <td class="p-3"><span class="text-emerald-700 font-bold">Active</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900">K. V. Anitha</td>
+                                        <td class="p-3"><span class="bg-blue-100 text-blue-900 font-extrabold px-2 py-0.5 rounded">Senior Editor</span></td>
+                                        <td class="p-3">Vijayawada Bureau</td>
+                                        <td class="p-3">Review & Direct Publish</td>
+                                        <td class="p-3"><span class="text-emerald-700 font-bold">Active</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-slate-900">M. Srinivas</td>
+                                        <td class="p-3"><span class="bg-emerald-100 text-emerald-900 font-extrabold px-2 py-0.5 rounded">District Reporter</span></td>
+                                        <td class="p-3">Visakhapatnam</td>
+                                        <td class="p-3">Drafting & AI Image Tools</td>
+                                        <td class="p-3"><span class="text-emerald-700 font-bold">Active</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -516,9 +551,9 @@
         </div>
     </div>
 
-    <!-- MAIN FOOTER (Navy & Mixed Blue Theme) -->
-    <footer class="bg-slate-900 text-white border-t border-slate-800 pt-10 pb-6 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-xs">
+    <!-- MAIN FOOTER WITH CUSTOM COMPANY CREDITS -->
+    <footer class="bg-slate-900 text-white border-t border-slate-800 pt-8 sm:pt-10 pb-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8 text-xs">
             <div class="space-y-3">
                 <div class="flex items-center space-x-2">
                     <div class="bg-blue-600 text-white p-2 rounded-lg font-black text-lg">
@@ -562,13 +597,22 @@
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 border-t border-slate-800/80 pt-4 flex flex-col md:flex-row justify-between items-center text-[11px] text-slate-500">
-            <p>© <span id="footer-year">2026</span> Demo News Portal (demonews.com). All rights reserved.</p>
-            <div class="flex space-x-4 mt-2 md:mt-0">
-                <a href="#" class="hover:text-slate-300">Privacy Policy</a>
-                <a href="#" class="hover:text-slate-300">Terms of Service</a>
-                <a href="#" class="hover:text-slate-300">Editorial Guidelines</a>
-                <a href="#" class="hover:text-slate-300">Contact Us</a>
+        <div class="max-w-7xl mx-auto px-4 border-t border-slate-800/80 pt-4 flex flex-col md:flex-row justify-between items-center text-[11px] text-slate-400 gap-2">
+            <div class="text-center md:text-left space-y-1">
+                <p>© <span id="footer-year">2026</span> Demo News Portal (demonews.com). All rights reserved.</p>
+                <p class="text-[11px] text-slate-400">
+                    Designed and Developed by 
+                    <a href="https://knrtech.in" target="_blank" rel="noopener noreferrer" class="font-extrabold text-cyan-400 hover:text-cyan-300 underline decoration-cyan-400/50 underline-offset-2 transition">
+                        KNR Tech Solutions
+                    </a> 
+                    under <span class="font-semibold text-slate-300">GLOWMINDS AI TECHNOLOGIES PRIVATE LIMITED</span>.
+                </p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-3 md:gap-4 text-slate-400">
+                <a href="#" class="hover:text-slate-200">Privacy Policy</a>
+                <a href="#" class="hover:text-slate-200">Terms of Service</a>
+                <a href="#" class="hover:text-slate-200">Editorial Guidelines</a>
+                <a href="#" class="hover:text-slate-200">Contact Us</a>
             </div>
         </div>
     </footer>
@@ -593,7 +637,7 @@
                 title: "AP High-Speed Rail Corridor Survey Alignment Finalized",
                 category: "Politics",
                 district: "Vijayawada",
-                image: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?auto=format&fit=crop&w=600&q=80",
+                image: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=800&q=80",
                 summary: "Survey teams complete aerial mapping for the high-speed rail corridor connecting key administrative centers.",
                 time: "25 mins ago",
                 author: "Vijayawada Desk",
@@ -636,6 +680,12 @@
 
         let currentRole = "Super Admin";
 
+        // Image Fallback Handler
+        function handleImageError(img) {
+            img.onerror = null; // Prevent infinite loop
+            img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450"><rect width="100%" height="100%" fill="%231E293B"/><text x="50%" y="50%" fill="%2338BDF8" font-family="sans-serif" font-size="28" font-weight="bold" text-anchor="middle" dominant-baseline="middle">DEMO NEWS PORTAL</text></svg>';
+        }
+
         // Dynamic Date & Year Rendering
         function initDate() {
             const dateObj = new Date();
@@ -653,6 +703,17 @@
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#39;');
+        }
+
+        // Mobile Nav Toggles
+        function toggleMobileNav() {
+            const nav = document.getElementById('mobile-nav');
+            nav.classList.toggle('hidden');
+        }
+
+        function toggleAdminSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            sidebar.classList.toggle('hidden');
         }
 
         // View Switcher
@@ -687,25 +748,25 @@
             // Render Hero Article
             heroContainer.innerHTML = `
                 <article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition">
-                    <div class="relative">
-                        <img src="${heroArticle.image}" alt="${escapeHTML(heroArticle.title)}" loading="lazy" class="w-full h-80 object-cover">
-                        <span class="absolute top-4 left-4 bg-blue-600 text-white text-xs font-black uppercase px-3 py-1 rounded shadow">${escapeHTML(heroArticle.category)}</span>
+                    <div class="relative w-full h-60 sm:h-80 bg-slate-800">
+                        <img src="${heroArticle.image}" alt="" onerror="handleImageError(this)" loading="lazy" class="w-full h-full object-cover">
+                        <span class="absolute top-3 left-3 sm:top-4 sm:left-4 bg-blue-600 text-white text-[11px] sm:text-xs font-black uppercase px-2.5 sm:px-3 py-1 rounded shadow">${escapeHTML(heroArticle.category)}</span>
                     </div>
-                    <div class="p-6">
-                        <div class="flex items-center text-xs text-slate-500 mb-2 space-x-4 font-semibold">
-                            <span><i class="far fa-clock mr-1 text-blue-600"></i> ${escapeHTML(heroArticle.time)}</span>
-                            <span><i class="fas fa-map-marker-alt mr-1 text-blue-600"></i> ${escapeHTML(heroArticle.district)}</span>
-                            <span><i class="fas fa-user-edit mr-1 text-blue-600"></i> ${escapeHTML(heroArticle.author)}</span>
+                    <div class="p-4 sm:p-6">
+                        <div class="flex flex-wrap items-center text-xs text-slate-500 mb-2 gap-x-4 gap-y-1 font-semibold">
+                            <span><i class="far fa-clock text-blue-600 mr-1"></i> ${escapeHTML(heroArticle.time)}</span>
+                            <span><i class="fas fa-map-marker-alt text-blue-600 mr-1"></i> ${escapeHTML(heroArticle.district)}</span>
+                            <span><i class="fas fa-user-edit text-blue-600 mr-1"></i> ${escapeHTML(heroArticle.author)}</span>
                         </div>
-                        <h2 class="text-2xl md:text-3xl font-black text-slate-900 leading-tight mb-3 hover:text-blue-600 cursor-pointer">
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 leading-tight mb-3 hover:text-blue-600 cursor-pointer">
                             ${escapeHTML(heroArticle.title)}
                         </h2>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-4">
                             ${escapeHTML(heroArticle.summary)}
                         </p>
                         <div class="flex items-center justify-between border-t pt-4 border-slate-100">
-                            <span class="text-xs text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded"><i class="fas fa-robot mr-1"></i> Verified by demonews.com AI Desk</span>
-                            <button class="text-blue-600 font-bold text-xs uppercase tracking-wider hover:underline">Read Full Story <i class="fas fa-arrow-right ml-1"></i></button>
+                            <span class="text-[11px] sm:text-xs text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded"><i class="fas fa-robot mr-1"></i> AI Verified</span>
+                            <button class="text-blue-600 font-bold text-xs uppercase tracking-wider hover:underline">Read Story <i class="fas fa-arrow-right ml-1"></i></button>
                         </div>
                     </div>
                 </article>
@@ -716,8 +777,8 @@
                 const card = `
                     <article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition flex flex-col justify-between">
                         <div>
-                            <div class="relative">
-                                <img src="${art.image}" alt="${escapeHTML(art.title)}" loading="lazy" class="w-full h-44 object-cover">
+                            <div class="relative w-full h-44 bg-slate-800">
+                                <img src="${art.image}" alt="" onerror="handleImageError(this)" loading="lazy" class="w-full h-full object-cover">
                                 <span class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded shadow">${escapeHTML(art.category)}</span>
                             </div>
                             <div class="p-4">
@@ -725,12 +786,12 @@
                                     <span><i class="far fa-clock"></i> ${escapeHTML(art.time)}</span>
                                     <span class="text-blue-600 font-bold"><i class="fas fa-map-marker-alt"></i> ${escapeHTML(art.district)}</span>
                                 </div>
-                                <h3 class="font-bold text-base text-slate-900 leading-snug hover:text-blue-600 cursor-pointer mb-2">${escapeHTML(art.title)}</h3>
+                                <h3 class="font-bold text-sm sm:text-base text-slate-900 leading-snug hover:text-blue-600 cursor-pointer mb-2">${escapeHTML(art.title)}</h3>
                                 <p class="text-xs text-slate-600 line-clamp-2">${escapeHTML(art.summary)}</p>
                             </div>
                         </div>
                         <div class="px-4 pb-4 pt-2 border-t border-slate-100 flex justify-between items-center text-[11px]">
-                            <span class="text-slate-500 font-medium">By ${escapeHTML(art.author)}</span>
+                            <span class="text-slate-500 font-medium">${escapeHTML(art.author)}</span>
                             <button class="text-blue-600 font-bold hover:underline">Read Story <i class="fas fa-angle-right"></i></button>
                         </div>
                     </article>
@@ -786,6 +847,10 @@
             if(tabName === 'dashboard') document.getElementById('admin-tab-dashboard').classList.remove('hidden');
             if(tabName === 'ai-studio') document.getElementById('admin-tab-ai-studio').classList.remove('hidden');
             if(tabName === 'users') document.getElementById('admin-tab-users').classList.remove('hidden');
+
+            if (window.innerWidth < 768) {
+                document.getElementById('admin-sidebar').classList.add('hidden');
+            }
         }
 
         // AI Generator Simulation
